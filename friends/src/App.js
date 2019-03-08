@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 //import logo from './logo.svg';
+import { connect } from 'react-redux';
+import { fetchFriends } from './actions';
 import './App.css';
 
 class App extends Component {
   state = {
     username: '',
-    password: '',
-    isLoggedIn: false,
-    waiting: false
+    password: ''
   }
 
   handleChange = event => {
@@ -19,9 +19,7 @@ class App extends Component {
   login = event => {
     event.preventDefault()
 
-    this.setState({
-      waiting: true
-    })
+    this.props.fetchFriends(this.state)
   }
 
   render() {
@@ -47,9 +45,17 @@ class App extends Component {
               <input type="submit" />
           </form>
         )}
+        {this.props.error !==  '' && ( <div className="text-error">{this.props.error}</div>)}
+
+        {this.props.isLoggedIn && ( <div className="logged-in">FETCH_FRIENDS_SUCCESS</div>)}
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  error: state.error,
+  isLoggedIn: state.isLoggedIn,
+  waiting: state.waiting
+})
+export default connect(mapStateToProps, {fetchFriends})(App);
